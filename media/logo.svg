@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="image-generation-mcp logo">
+  <title>image-generation-mcp logo</title>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3f1228"/><stop offset="1" stop-color="#1d0a07"/></linearGradient><radialGradient id="core"><stop offset="0" stop-color="#b9fdf4"/><stop offset="1" stop-color="#25f476" stop-opacity="0"/></radialGradient></defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256.0" cy="256.0" r="210.0" fill="none" stroke="#5ae2b8" stroke-opacity="0.35" stroke-width="3"/>
+  <polygon points="452.00,256.00 354.00,425.74 250.03,317.71 306.46,292.02" fill="#45ed87" fill-opacity="0.800"/>
+  <polygon points="354.00,425.74 158.00,425.74 199.57,281.69 250.03,317.71" fill="#45ede9" fill-opacity="0.800"/>
+  <polygon points="158.00,425.74 60.00,256.00 205.54,219.98 199.57,281.69" fill="#458eed" fill-opacity="0.800"/>
+  <polygon points="60.00,256.00 158.00,86.26 261.97,194.29 205.54,219.98" fill="#5f45ed" fill-opacity="0.800"/>
+  <polygon points="158.00,86.26 354.00,86.26 312.43,230.31 261.97,194.29" fill="#c245ed" fill-opacity="0.800"/>
+  <polygon points="354.00,86.26 452.00,256.00 306.46,292.02 312.43,230.31" fill="#ed45b5" fill-opacity="0.800"/>
+  <circle cx="256.0" cy="256.0" r="96.0" fill="url(#core)"/>
+  <circle cx="256.0" cy="256.0" r="26.0" fill="#e0ffff"/>
+</svg>

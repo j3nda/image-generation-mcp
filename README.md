@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="media/logo.svg" alt="image-generation-mcp logo" width="128" height="128">
+</p>
+
 <h1 align="center">image-generation-mcp</h1>
 
 <p align="center">
@@ -22,10 +26,9 @@ The server generates the image with **Gemini** or **OpenAI**, writes it to disk,
 returns only the absolute path. Your context window stays clean, and the file is
 right there for the agent to open, move, or hand to another tool.
 
-```
-You:   generate a red bicycle on a white background, 16:9
-Agent: → /Users/you/project/out/20260827-172746-c9b3.png
-```
+<p align="center">
+  <img src="media/screenshot.svg" alt="A Claude Code session generating and then editing an image" width="900">
+</p>
 
 ## Features
 
@@ -216,6 +219,13 @@ uv run pytest -m smoke -s  # real API calls; costs money, prints the paths
 
 Smoke tests are deselected by default so a normal `pytest` run never spends money.
 `test_edits_a_real_image` costs two generations, since it makes its own reference image.
+
+The logo and the screenshot are generated too — edit the scripts, not the SVGs:
+
+```bash
+uv run python media/generate_logo.py
+uv run python media/generate_screenshot.py
+```
 
 The 100-line-per-file ceiling is a design constraint, not an accident: it keeps every
 module reviewable in one screen. Split rather than stretch.
