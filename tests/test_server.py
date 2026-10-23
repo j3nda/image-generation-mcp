@@ -1,5 +1,7 @@
 """End-to-end tool flow with a stubbed provider."""
 
+import base64
+import json
 from pathlib import Path
 
 import pytest
@@ -62,3 +64,37 @@ async def test_invalid_aspect_ratio_raises(stub: StubProvider) -> None:
     with pytest.raises(ValueError, match="Unsupported aspect_ratio"):
         await generate_image("a cat", aspect_ratio="7:3")
     assert stub.calls == []
+
+
+async def test_writes_sidecar_next_to_image(stub: StubProvider, pixel_file: Path) -> None:
+    result = Path(
+        await generate_image(
+            "a tile",
+            images=[str(pixel_file)],
+            parent=str(pixel_file),
+            intent="top-down tile, readable at 64px",
+        )
+    )
+    sidecar = json.loads(result.with_suffix(".json").read_text())
+    assert sidecar["image"] == result.name
+    assert sidecar["prompt"] == "a tile"
+    assert sidecar["intent"] == "top-down tile, readable at 64px"
+    assert sidecar["references"] == [str(pixel_file.resolve())]
+    assert sidecar["parent"] == str(pixel_file.resolve())
+    assert (sidecar["provider"], sidecar["model"]) == ("stub", "model")
+    assert "T" in sidecar["date"]
+    # parent goes to the model first, before the references
+    assert len(stub.calls[0][1]) == 2
+
+
+async def test_sidecar_without_parent_or_intent(stub: StubProvider) -> None:
+    result = Path(await generate_image("a cat"))
+    sidecar = json.loads(result.with_suffix(".json").read_text())
+    assert (sidecar["parent"], sidecar["intent"], sidecar["references"]) == (None, None, [])
+
+
+async def test_sidecar_does_not_inline_base64(stub: StubProvider, pixel_png: bytes) -> None:
+    payload = base64.b64encode(pixel_png).decode()
+    result = Path(await generate_image("x", images=[payload]))
+    sidecar = json.loads(result.with_suffix(".json").read_text())
+    assert sidecar["references"] == [f"<inline base64 image, {len(payload)} chars>"]

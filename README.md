@@ -138,7 +138,13 @@ loopback only and has no authentication, so put it behind a proxy before exposin
 ## The tool
 
 ```python
-generate_image(prompt: str, images: list[str] | None = None, aspect_ratio: str = "1:1") -> str
+generate_image(
+    prompt: str,
+    images: list[str] | None = None,
+    aspect_ratio: str = "1:1",
+    parent: str | None = None,
+    intent: str | None = None,
+) -> str
 ```
 
 | Parameter | Description |
@@ -146,9 +152,30 @@ generate_image(prompt: str, images: list[str] | None = None, aspect_ratio: str =
 | `prompt` | What the image should show. |
 | `images` | Up to 4 reference images. Each is a local file path, an `http(s)://` URL (30 s timeout, streamed and aborted past 20 MB), a `data:` URI, or bare base64. An existing file always wins; otherwise a base64-shaped string is decoded as such. |
 | `aspect_ratio` | `1:1`, `2:3`, `3:2`, `3:4`, `4:3`, `4:5`, `5:4`, `9:16`, `16:9`, `21:9`. |
+| `parent` | The image being edited, if this is an edit. Same formats as `images`; sent to the model first and counts toward the 4-image limit. |
+| `intent` | One sentence on what the image is for, e.g. `"top-down tile, transparent background, readable at 64px"`. |
 
 Returns the absolute path of the written file, e.g. `/path/to/out/20260827-172746-c9b3.png`.
 Names are `YYYYmmdd-HHMMSS-xxxx`, so results sort chronologically and never collide.
+
+Next to every image a sidecar `<same name>.json` records how it was made:
+
+```json
+{
+  "image": "20260827-172746-c9b3.png",
+  "date": "2026-08-27T17:27:46+02:00",
+  "intent": "top-down tile, transparent background, readable at 64px",
+  "prompt": "...",
+  "references": ["/abs/path/ref.png", "https://example.com/ref.jpg"],
+  "parent": "/abs/path/20260827-170102-a1b2.png",
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-image",
+  "aspect_ratio": "1:1"
+}
+```
+
+Local paths are stored absolute; base64 inputs are recorded as a placeholder, not inlined.
+If you rename an image, rename its `.json` too and update its `image` field.
 
 **On aspect ratios:** Gemini honours all ten. OpenAI accepts only three sizes, so
 ratios collapse to the nearest of `1024x1024`, `1536x1024`, or `1024x1536` — asking
